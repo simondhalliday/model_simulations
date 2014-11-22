@@ -1,0 +1,89 @@
+---
+title: "Data, Stats and Numerical Models"
+author: "Simon Halliday"
+date: "INET-CORE Workshop, November 3-5, 2014"
+output: ioslides_presentation
+runtime: shiny
+mathjax: local
+self_contained: false
+
+---
+
+## Fractions, Models \& Graphs
+For the isoquants curves depicted, we have general Cobb-Douglas production with constant returns to scale and decreasing returns to inputs:  
+$$x(L,K)= L^\alpha K^{1-\alpha}$$
+$$mrt(L,K) = \frac{x_L}{x_K} = \frac{\alpha K}{(1-\alpha)L}$$
+
+For example, at $\alpha = 0.6$: 
+$$mrt(L,K) = \frac{3K}{2L}$$. 
+
+##Isoquants
+```{r, echo=FALSE}
+inputPanel(
+    #Slide for Intensity of Preferences, a
+      sliderInput("a",
+                  HTML("Intensity of Production (a)"),
+                  min = 0.05,
+                  max = 0.95,
+                  value = 0.5,
+                  step = 0.05),
+      
+    #Slider for utility level of indifference curves
+      sliderInput("x",
+                  HTML("Quota of Lowest Isoquant Curve (x)"),
+                  min = 10,
+                  max = 50,
+                  value = 25,
+                  step = 5)
+  )
+
+renderPlot({
+  indiff1Fn <- function(L, x=10, a=0.5) {
+      (x/(L^(a)))^(1/(1-a))
+    }
+  
+  indiff2Fn <- function(L, x=10, a=0.5) {
+      ((x+10)/(L^(a)))^(1/(1-a))
+    }
+  
+    indiff3Fn <- function(L, x=10, a=0.5) {
+      ((x+20)/(L^(a)))^(1/(1-a))
+    }
+  
+   COL <- c("#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#66A61E", "#E6AB02", "#A6761D", "#666666")
+    par(mar =  c(5, 5, 4, 2))
+    xlims <- c(0, 100)
+    ylims <- c(0, 100)
+    
+    plot(0, 0, xlim = xlims, ylim = ylims, type = "n",
+         xlab = expression(paste("Labor ", L)),
+         ylab = expression(paste("Capital ", K)),
+         xaxt = "n", 
+         yaxt = "n", 
+         cex.lab = 1.8, 
+         bty = "n")
+    
+    npts <- 500
+    xx1 <- seq(xlims[1], xlims[2], length.out = npts)
+    lines(xx1, indiff1Fn(xx1, a=input$a, x=input$x), col = COL[1], lwd = 4)
+    lines(xx1, indiff2Fn(xx1, a=input$a, x=input$x), col = COL[2], lwd = 4)
+    lines(xx1, indiff3Fn(xx1, a=input$a, x=input$x), col = COL[3], lwd = 4)
+    
+    axis(1, at = xlims, pos = 0)
+    axis(2, at = ylims, pos = 0)
+  add_legend <- function(...) {
+  opar <- par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), 
+              mar=c(0, 0, 0, 0), new=TRUE)
+  on.exit(par(opar))
+  plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+  legend(...)
+}
+
+add_legend("topright", legend=c(
+ expression(paste("K =", ((x[1])/(L^a))^(1/(1-a)),)), 
+ expression(paste("K =", ((x[2])/(L^a))^(1/(1-a)), )),
+ expression(paste("K =", ((x[3])/(L^a))^(1/(1-a)), ))
+ ),
+ col = COL, lty = 1, lwd = 2, bty = "n", cex=1.5, pt.cex = 1)
+})
+```
