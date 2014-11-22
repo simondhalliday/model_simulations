@@ -1,8 +1,7 @@
 model_simulations
 =================
 
-
-economic models for introductory and 
+This is a large project where a colleague (Andrew Bray) and I are composing simulations of  economic models for introductory and
 intermediate economics courses. We hope to provide a variety of models both for 'mainstream' and 'heterodox' economics. 
 
 Isoquant Model:
